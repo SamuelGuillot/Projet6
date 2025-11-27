@@ -1,0 +1,66 @@
+.banner {
+    background-color: #61787F;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 2rem auto;
+    max-width: 45%;
+}
+
+h1 {
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: 0;
+    vertical-align: middle;
+}
+
+.banner-image {
+    height: 6rem;
+    width: auto;
+    margin: 20px;
+
+}
+
+h2 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 48px;
+    line-height: 44px;
+    letter-spacing: 0;
+    vertical-align: middle;
+}
+
+#bestMovieRect {
+
+    width: 835px;
+    height: 369px;
+    border: 6px solid black;
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+
+    margin: 0 auto;
+
+}
+
+#bestMovieButton {
+
+    border-radius: 25px;
+    padding: 2px 4px;
+
+    background-color: rgba(250, 11, 11, 1);
+    ;
+    color: white;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+
+    margin-left: auto;
+    display: block;
+}
