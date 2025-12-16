@@ -5,66 +5,74 @@
     <meta charset="UTF-8">
     <title>Your Page Title</title>
     <link rel="stylesheet" href="style.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
-
-
+    <script defer src="script.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;600&display=swap" rel="stylesheet">
 </head>
-<!-- ## Nav peut bliquer dessus, header pour logo -->
 
 <body>
     <div id="websiteLogo" class="banner">
-        <img src="bfc68efce2ebbbe61c2ce32b7d75dfc497b7201f.png" class="banner-image">
+        <img src="logo.png" class="banner-image" alt="Logo">
         <h1>Vidéos à la demande</h1>
     </div>
-    <div class="headingContainer">
-        <div id="bestMovieContainer">
-            <h2>Meilleur Film</h2>
+
+    <div class="content-wrapper">
+        <h2>Meilleur Film</h2>
+        <br>
+        <div id="bestMovieRect">
+            <div id="bestMovie">
+                <div id="movie-content-wrapper">
+                    <p id="bestmovieName" class="box"></p>
+                    <p id="bestmovieDescription" class="box"></p>
+                    <button type="button" id="bestMovieButton" class="box">Détails</button>
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="bestMovieRect">
-        <img src="" alt="Best Movie image" id="bestmovieImage" style="display: none">
-
-        <div id="bestMovieInfo">
-
-            <p id="bestmovieName"></p>
-            <p id="bestmovieDescription"></p>
-            <button type="button" id="bestMovieButton">Détails</button>
-        </div>
-    </div>
-    <h2>Film les mieux notés</h2>
-    <div id="Top6Films"></div>
-    <h2>Mystery</h2>
-    <div id="Top6Mystery"></div>
-    <h2>Catégorie 2</h2>
-
-    <div class="selectContainer">
-        <select id="buttoncategory" name="Genreselect">
-
-        </select>
-        <div class="paragraphContainer">
-            <p>Categorie choisie dans le menu déroulant</p>
-        </div>
-    </div>
-
-
-    <div class="headingContainer">
+        <br>
+        <h2>Film les mieux notés</h2>
+        <br>
+        <div id="Top6Films" class="grid"></div>
+        <br>
+        <h2 class="text-left">Mystery</h2>
+        <br>
+        <div id="Top6Mystery" class="grid"></div>
+        <br>
+        <h2>Catégorie 2</h2>
+        <br>
+        <div id="Top6Romance" class="grid"></div>
+        <br>
         <h2>Autres</h2>
+        <br>
+
+        <div class="selectContainer">
+            <select id="buttoncategory" name="genreSelect" onchange="handleGenreSelection(event)">
+            </select>
+            <div id="genreMovies" class="grid">
+                <p>Categorie choisie dans le menu déroulant</p>
+            </div>
+        </div>
+        <br>
+        <h2>Autres</h2>
+        <br>
+
+        <div class="selectContainer">
+            <select id="buttoncategory2" name="genreSelect2" onchange="handleGenreSelection(event)">
+            </select>
+            <div id="genreMovies2" class="grid">
+                <p>Categorie choisie dans le menu déroulant</p>
+            </div>
+        </div>
+
+        <div class="paragraphContainer">
+            <p>Voir au dessus (catégorie choisie = Comédies)</p>
+        </div>
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="closeModal">&times;</span>
+            </div>
+        </div>
+
     </div>
-    <div class="selectContainer">
-        <select id="categories2" name="categories2">
-            <option value="comedy">Comédies</option>
-            <option value="action">Films d'Action</option>
-            <option value="fantasy">Films de Fantaisie</option>
-            <option value="horror">Films d'Horreur</option>
-            <option value="science-fiction">Science-fiction</option>
-            <option value="western">Westernes</option>
-        </select>
-    </div>
-    <div class="paragraphContainer">
-        <p>Voir au dessus (catégorie choisie = Comédies)</p>
-    </div>
-    <script src="script.js"></script>
 </body>
 
 </html>

@@ -1,142 +1,248 @@
+const baseUrl = "http://localhost:8000/api/v1/"
 
 
-async function fetchGenres(url) {
 
-    try {
-        const response = await fetch(url);
+function generateUrl({ endpoint, pageSize = 6, sortBy = '', genre = '' }) {
+    const params = new URLSearchParams();
 
-        if (!response.ok) {
-            throw new Error("Could not fetch ressource")
-        }
-        const data = await response.json();
-        const genres = data.results.filter(item => item !== null);
+    params.append('page_size', pageSize);
 
-        const genreList = genres.map(genre => ({
-            name: genre.name,
-            value: genre.value
-        }));
+    if (sortBy) {
+        params.append('sort_by', sortBy);
+    }
 
-        return genreList;
+    if (genre) {
+        params.append('genre', genre);
+    }
 
-    } catch (error) {
-        console.error(error);
+    return `${baseUrl}${endpoint}?${params.toString()}`;
+}
+
+const urlgenres = generateUrl({
+    endpoint: "genres/",
+    pageSize: 50
+});
+
+async function fetchGenres(urlgenres) {
+    const response = await fetch(urlgenres);
+    if (!response.ok) {
+        console.error("Error fetching genres");
         return [];
     }
+    const data = await response.json();
+
+    return data.results.map(genre => ({
+        name: genre.name,
+        value: genre.value
+    }));
+}
+
+
+async function getMovieUrls(genre) {
+    const url = generateUrl({
+        endpoint: "titles/",
+        pageSize: 6,
+        sortBy: "-imdb_score",
+        genre: genre
+    });
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error("Could not fetch resource");
+    }
+
+    const data = await response.json();
+    const movieUrls = data.results.map(movie => movie.url)
+
+    return movieUrls;
+
+}
+
+
+async function getTopMovieUrl() {
+    const url = generateUrl({
+        endpoint: "titles/",
+        pageSize: 1,
+        sortBy: "-imdb_score",
+    });
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error("Could not fetch resource");
+    }
+
+    const data = await response.json();
+
+    const movieUrl = data.results[0].url
+
+    return movieUrl;
+}
+
+async function getMovieDetails(movieUrl) {
+    const response = await fetch(movieUrl);
+
+    if (!response.ok) {
+        throw new Error("Could not fetch movie details");
+    }
+
+    const details = await response.json();
+    return details;
+}
+
+function displayMovieImage(movie, containerId) {
+    const container = document.getElementById(containerId);
+
+    const movieBox = document.createElement("div");
+    movieBox.classList.add("movie-box-wrapper");
+    movieBox.movieDetails = movie;
+
+    const imgElement = document.createElement("img");
+    imgElement.src = movie.image_url;
+    imgElement.classList.add("box");
+    imgElement.onerror = function () {
+        imgElement.src = 'https://m.media-amazon.com/images/M/MV5BNjZhYWVhNjktNDRmNS00NGUyLThjZTgtYmU4NmQzYzIyZTk4XkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_UY268_CR0,0,182,268_AL_.jpg';
+    };
+
+    imgElement.addEventListener('click', function () {
+        openModal(movie);
+    });
+
+    movieBox.appendChild(imgElement);
+    container.insertBefore(movieBox, container.firstChild);
+
+    return movieBox;
 }
 
 
 
-async function getMovieUrls(request) {
-    try {
-        const response = await fetch(request);
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
+}
 
-        if (!response.ok) {
-            throw new Error("Could not fetch resource");
-        }
+function openModal(movie) {
+    const modal = document.getElementById("modal");
+    const modalContent = document.querySelector(".modal-content");
 
-        const data = await response.json();
-        const movieUrls = [];
+    modalContent.innerHTML = '';
+
+    const movieTitle = document.createElement("h2");
+    movieTitle.textContent = movie.title;
+
+    const yearAndGenres = document.createElement("p");
+    yearAndGenres.textContent = `${movie.year} - ${movie.genres.join(", ")}`;
+
+    const ageDurationAndOrigin = document.createElement("p");
+    ageDurationAndOrigin.textContent = `${movie.rated} - ${movie.duration} minutes (${movie.countries.join(", ")})`;
+
+    const imdbScore = document.createElement("p");
+    imdbScore.textContent = `IMDB score: ${movie.imdb_score}/10`;
+
+    const boxOffice = document.createElement("p");
+    if (movie.budget) {
+        boxOffice.textContent = `Recettes au box-office: $${movie.budget.toLocaleString()}`;
+    } else {
+        boxOffice.textContent = `Budget: `;
+    }
+
+    const directorSection = document.createElement("p");
+    directorSection.textContent = `Réalisé par: ${movie.directors.join(", ")}`;
+
+    const movieDescription = document.createElement("p");
+    movieDescription.textContent = `${movie.description}`;
+
+    const actorsSection = document.createElement("p");
+    actorsSection.textContent = `Avec: ${movie.actors.join(", ")}`;
+
+    const movieImage = document.createElement("img");
+    movieImage.src = movie.image_url;
+    movieImage.alt = `Image for ${movie.title}`;
+    movieImage.classList.add("modal-image");
+    movieImage.onerror = function () {
+        movieImage.src = 'https://m.media-amazon.com/images/M/MV5BNjZhYWVhNjktNDRmNS00NGUyLThjZTgtYmU4NmQzYzIyZTk4XkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_UY268_CR0,0,182,268_AL_.jpg';
+    };
+
+    const fermerButton = document.createElement("button");
+    fermerButton.textContent = "Fermer";
+    fermerButton.id = "fermerModalBtn";
+    fermerButton.onclick = function () {
+        closeModal();
+    };
+    [
+        movieImage,
+        movieTitle,
+        yearAndGenres,
+        ageDurationAndOrigin,
+        imdbScore,
+        boxOffice,
+        directorSection,
+        movieDescription,
+        actorsSection,
+        fermerButton
+    ].forEach(element => modalContent.appendChild(element));
+
+    const closeModalButton = document.getElementById("fermerModalBtn");
+    closeModalButton.onclick = closeModal;
+
+    modal.style.display = "block";
+
+}
+
+async function addOverlay(movieBox) {
+    const movie = movieBox.movieDetails;
+    const overlay = document.createElement("div");
+    overlay.id = "movie-overlay";
+
+    const titleMovie = document.createElement("p");
+    titleMovie.textContent = movie.title;
+    titleMovie.id = "movieTitleBox";
+
+    const detailButton = document.createElement("button");
+    detailButton.id = "DetailModalBtn";
+    detailButton.textContent = "Détails";
+    detailButton.onclick = function () {
+        openModal(movie);
+    };
+
+    overlay.appendChild(titleMovie);
+    overlay.appendChild(detailButton);
+
+    movieBox.appendChild(overlay);
+}
+
+async function displayBestMovie(containerId) {
+    const movieUrl = await getTopMovieUrl()
+    const movieDetails = await getMovieDetails(movieUrl);
+    displayMovieImage(movieDetails, containerId);
+    const imgElement = document.querySelector(`#${containerId} img`);
+    document.getElementById("bestmovieName").textContent = movieDetails.title;
+    document.getElementById("bestmovieDescription").textContent = movieDetails.description;
+
+    const button = document.getElementById('bestMovieButton');
+
+    button.addEventListener('click', function () {
+        openModal(movieDetails);
+    });
 
 
-        for (let i = 0; i < data.results.length; i++) {
-            const movie = data.results[i];
-            movieUrls.push(movie.url);
-        }
+}
 
-        return movieUrls;
+async function displayTop6Movies(genre, containerId) {
+    const movieUrls = await getMovieUrls(genre);
+    const container = document.getElementById(containerId)
+    container.innerHTML = ""
+    for (const url of movieUrls) {
+        const movieDetails = await getMovieDetails(url);
+        const movieBoxElement = displayMovieImage(movieDetails, containerId);
 
-    } catch (error) {
-        console.error(error);
+        movieBoxElement.classList.add("top-6"); //TODO à mettre dans displayimage selon param
+        addOverlay(movieBoxElement);
     }
 }
 
-async function getMovieDetails(movieUrls) {
-    try {
-        const movieDetails = [];
 
-        for (let i = 0; i < movieUrls.length; i++) {
-            const url = movieUrls[i];
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error("Could not fetch movie details");
-            }
-
-            const details = await response.json();
-            movieDetails.push(details);
-        }
-
-        return movieDetails;
-
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-
-async function displaySingleMovie(requestUrl, id) {
-    try {
-        const movieUrls = await getMovieUrls(requestUrl);
-        const firstUrl = [movieUrls[0]];
-        const movieDetails = await getMovieDetails(firstUrl);
-
-        const movie = movieDetails[0];
-        const imgElement = document.getElementById(id);
-        imgElement.src = movie.image_url;
-        imgElement.style.display = "inline-block";
-        imgElement.style.margin = "10px";
-        imgElement.onerror = function () {
-            imgElement.src = 'https://m.media-amazon.com/images/M/MV5BNjZhYWVhNjktNDRmNS00NGUyLThjZTgtYmU4NmQzYzIyZTk4XkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_UY268_CR0,0,182,268_AL_.jpg';
-        };
-
-
-        document.getElementById("bestmovieDescription").textContent = movie.description;
-        document.getElementById("bestmovieName").textContent = movie.title;
-
-    } catch (error) {
-        console.error("Error displaying movie:", error);
-    }
-}
-
-
-async function displayMoviesImage(requestUrl, id) {
-
-    try {
-        const movieUrls = await getMovieUrls(requestUrl);
-        const movieDetails = await getMovieDetails(movieUrls);
-        const moviesContainer = document.getElementById(id);
-
-        movieDetails.forEach(movie => {
-
-            const imgElement = document.createElement("img");
-            imgElement.src = movie.image_url;
-            imgElement.style.display = "inline-block";
-            imgElement.style.margin = "10px";
-
-            imgElement.onerror = function () {
-                imgElement.src = 'https://m.media-amazon.com/images/M/MV5BNjZhYWVhNjktNDRmNS00NGUyLThjZTgtYmU4NmQzYzIyZTk4XkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_UY268_CR0,0,182,268_AL_.jpg';
-            };
-            moviesContainer.appendChild(imgElement);
-        });
-
-    } catch (error) {
-        console.error("Error fetching or displaying movies:", error);
-    }
-}
-
-const urltop6movies = "http://localhost:8000/api/v1/titles/?page_size=6&sort_by=-imdb_score"
-const urltopmovie = "http://localhost:8000/api/v1/titles/?page_size=1&sort_by=-imdb_score"
-const urlgenres = "http://localhost:8000/api/v1/genres/?page_size=50"
-const urltop6moviesgenres = "http://localhost:8000/api/v1/titles/?page_size=6&sort_by=-imdb_score&genre="
-const urlMystery = "http://localhost:8000/api/v1/titles/?page_size=6&sort_by=-imdb_score&genre=Mystery"
-
-
-
-function fillGenreDropdown(genres) {
-    const selectElement = document.getElementById('buttoncategory');
-    const defaultOption = document.createElement('option');
-    defaultOption.textContent = "genres"
+function fillGenreDropdown(genres, containerId, selectId) {
+    const selectElement = document.getElementById(selectId);
 
     genres.forEach(genre => {
         const option = document.createElement('option');
@@ -144,156 +250,30 @@ function fillGenreDropdown(genres) {
         option.value = genre.name;
         selectElement.appendChild(option);
     });
+
+    selectElement.addEventListener('change', function (event) {
+        handleGenreSelection(event, containerId);
+    });
 }
 
-fetchGenres(urlgenres).then(genres => {
-    console.log(genres);
-    fillGenreDropdown(genres);
-});
-
-function handleGenreSelection(event) {
-    const selectedGenreValue = event.target.name;
-    console.log("Selected Genre Value:", selectedGenreValue);
-
+function handleGenreSelection(event, containerId) {
+    const selectedGenreValue = event.target.value;
     if (selectedGenreValue) {
-        const urlSelectedGenre = `http://localhost:8000/api/v1/titles/?page_size=6&sort_by=-imdb_score&genre=${selectedGenreValue}`;
-        displayMoviesImage(urlSelectedGenre, "buttoncategory")
+        displayTop6Movies(selectedGenreValue, containerId);
     }
 }
 
-displaySingleMovie(urltopmovie, "bestmovieImage")
+fetchGenres(urlgenres).then(genres => {
+    fillGenreDropdown(genres, "genreMovies", "buttoncategory");
+});
 
-
-displayMoviesImage(urltop6movies, "Top6Films")
-displayMoviesImage(urlMystery, "Top6Mystery")
-
-
-
-
-
-// async function fetchTopMovie() {
-
-//     try {
-
-
-//         const response = await fetch("http://localhost:8000//api/v1/titles/?page_size=1&sort_by=-imdb_score");
-
-//         if (!response.ok) {
-//             throw new Error("Could not fetch ressource")
-//         }
-//         const data = await response.json();
-
-//         const movie = data.results[0];
-
-//         // console.log(data.results[0].id)
-//         document.getElementById("bestmovieName").textContent = movie.title;
-
-//         const imgElement = document.getElementById("bestmovieImage");
-//         imgElement.src = movie.image_url;
-//         imgElement.style.display = "block";
-
-//         const detailsResponse = await fetch(movie.url);
-
-//         if (!detailsResponse.ok) {
-//             throw new Error("Could not fetch movie details");
-//         }
-
-//         const details = await detailsResponse.json();
-
-//         document.getElementById("movieDescription").textContent = details.description;
-
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
-
-
-// async function fetchTop6Movies() {
-
-//     try {
-
-
-//         const response = await fetch("http://localhost:8000//api/v1/titles/?page_size=6&sort_by=-imdb_score");
-
-//         if (!response.ok) {
-//             throw new Error("Could not fetch ressource")
-//         }
-//         const data = await response.json();
-
-//         for x in data.results:
-//             const movie = data.results[x]
-
-
-//         // console.log(data.results[0].id)
-//         document.getElementById("movieName").textContent = movie.title;
-
-//         const imgElement = document.getElementById("topmovieImage");
-//         imgElement.src = movie.image_url;
-//         imgElement.style.display = "block";
-
-//         const detailsResponse = await fetch(movie.url);
-
-//         if (!detailsResponse.ok) {
-//             throw new Error("Could not fetch movie details");
-//         }
-
-//         const details = await detailsResponse.json();
-
-//         document.getElementById("movieDescription").textContent = details.description;
-
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+fetchGenres(urlgenres).then(genres => {
+    fillGenreDropdown(genres, "genreMovies2", "buttoncategory2");
+});
 
 
 
-
-
-// fetchTopMovie();
-
-// recuperer meilleur movie
-// recupere top 6
-// recuperer top 6 d'une catégorie
-// récuperer liste catégorie
-// récupérer détails d'un film
-
-// async function displaySingleMovieImage(requestUrl, id) {
-
-//     try {
-//         const movieUrls = await getMovieUrls(requestUrl);
-//         const movieDetails = await getMovieDetails(movieUrls);
-
-
-//         const moviesContainer = document.getElementById(id);
-
-
-//         movieDetails.forEach(movie => {
-//             const imgElement = document.createElement("img");
-//             imgElement.src = movie.image_url;
-//             imgElement.style.display = "inline-block";
-//             imgElement.style.margin = "10px";
-//             imgElement.onerror = function () {
-//                 imgElement.src = 'https://m.media-amazon.com/images/M/MV5BNjZhYWVhNjktNDRmNS00NGUyLThjZTgtYmU4NmQzYzIyZTk4XkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_UY268_CR0,0,182,268_AL_.jpg';
-//             };
-//             moviesContainer.appendChild(imgElement);
-//         });
-
-//     } catch (error) {
-//         console.error("Error fetching or displaying movies:", error);
-//     }
-// }
-
-// async function getMovieDetails(url) {
-//     const detailsResponse = await fetch(url);
-
-//     if (!detailsResponse.ok) {
-//         throw new Error("Could not fetch movie details");
-//     }
-
-//     const details = await detailsResponse.json();
-
-//     document.getElementById("movieDescription").textContent = details.description;
-//     document.getElementById("bestmovieName").textContent = details.title;
-// }
-
+displayBestMovie("bestMovie");
+displayTop6Movies("mystery", "Top6Mystery")
+displayTop6Movies("romance", "Top6Romance")
+displayTop6Movies("", "Top6Films")
