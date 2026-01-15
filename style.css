@@ -3,8 +3,9 @@ body {
 }
 
 .content-wrapper {
-    max-width: 55rem;
+    max-width: 52.3125rem;
     margin: 0 auto;
+    min-width: 400px;
 }
 
 
@@ -14,8 +15,10 @@ body {
     align-items: center;
     gap: 1.5rem;
     margin: 2rem auto;
-    max-width: 55rem;
+    max-width: 52.3125rem;
     justify-content: flex-start;
+    min-width: 329px;
+    min-height: 137px;
 
 }
 
@@ -80,72 +83,87 @@ h2 {
 }
 
 #bestMovieRect {
-
-    width: 95%;
+    width: 100%;
     height: 369px;
     border: 6px solid black;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
     gap: 20px;
-
     margin: 0 auto;
-
+    box-sizing: border-box;
 }
 
-
-#bestMovie img {
-    width: 227px;
-    height: 334px;
-}
-
-.bestMovie {
+#bestMovie {
     display: flex;
-    flex-direction: row;
-    flex-grow: 1;
+    width: 100%;
     height: 100%;
 }
 
+.movie-box-wrapper {
+    flex: 1;
+}
+
+#bestMovie img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    max-width: 227px;
+    max-height: 334px;
+}
 
 #movie-content-wrapper {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 2;
+    padding-left: 5px;
 }
 
-
 #bestmovieName {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: -10px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+
+
 }
 
 #bestmovieDescription {
     margin-bottom: auto;
     line-height: 1.4;
-    font-size: 14px;
+    font-size: 28px;
     padding-bottom: 10px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    min-height: 170px;
+    font-weight: 200;
 }
 
 #bestMovieButton {
-
     border-radius: 25px;
-    padding: 2px 4px;
-
+    padding: 10px 20px;
     background-color: rgba(250, 11, 11, 1);
-    ;
     color: white;
     border: none;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
-
     margin-left: auto;
     display: block;
+    width: 166px;
+    height: 68px;
+    font-weight: 500;
 }
+
 
 .modal {
     display: none;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
@@ -156,16 +174,102 @@ h2 {
 
 .modal-content {
     background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
+    width: 778px;
+    height: auto;
+    min-height: 400px;
+    border: 6px solid #000;
+    margin: 20px auto;
+    padding: 40px;
+    box-sizing: border-box;
+    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    grid-template-rows: repeat(5, auto);
+    column-gap: 30px;
+
 }
 
 .modal-image {
+    width: 227px;
+    height: 334px;
+    border: 2px solid grey;
+}
+
+
+.modal-content h2,
+.modal-content p {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-content h2 {
+    grid-column: 1;
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1.4;
+}
+
+
+.modal-content p:nth-of-type(1) {
+    grid-row: 2;
+    font-weight: bold;
+}
+
+.modal-content p:nth-of-type(2) {
+    grid-row: 3;
+    font-weight: bold;
+}
+
+.modal-content p:nth-of-type(3) {
+    grid-row: 4;
+    font-weight: bold;
+}
+
+.modal-content p:nth-of-type(4) {
+    grid-row: 5;
+    font-weight: bold;
+}
+
+.modal-content p:nth-of-type(5) {
+    grid-column: 1;
+    margin-top: 35px;
+}
+
+.modal-image {
+    grid-column: 2;
+    grid-row: 1 / span 6;
     width: 100%;
     height: auto;
+    align-self: start;
+}
+
+.modal-content p:nth-of-type(6) {
+    grid-column: 1 / span 2;
+    margin-top: 40px;
+    line-height: 1.4;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 24px;
+}
+
+.modal-content p:nth-of-type(7) {
+    grid-column: 1 / span 2;
+    margin-top: 25px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1.4;
 }
 
 #fermerModalBtn {
@@ -182,9 +286,142 @@ h2 {
     border: none;
     cursor: pointer;
     margin-top: 20px;
+    grid-column: 1 / span 2;
+    justify-self: center;
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+#plusBtn,
+#moinsBtn {
+    width: 214px;
+    height: 36px;
+    border-radius: 25px;
+    padding-top: 2px;
+    padding-right: 4px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    gap: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+
+
+    display: none;
+}
+
+#Top6Films,
+#genreMovies,
+#genreMovies2,
+#Top6Mystery,
+#Top6Romance {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+    justify-items: center;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+
+    #Top6Films,
+    #genreMovies,
+    #genreMovies2,
+    #Top6Mystery,
+    #Top6Romance {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #plusBtn {
+        display: block;
+    }
+
+
+    .movie-box-2.nodisplay,
+    .movie-box-1.nodisplay {
+        display: none;
+    }
+
+
+    @media (max-width: 768px) {
+
+        #bestMovieRect {
+            width: 329px;
+            height: auto;
+            padding: 5px;
+
+        }
+
+        #bestMovie img {
+            width: 298px;
+            height: 241px;
+
+        }
+
+        #bestMovieButton {
+
+            width: 91px;
+            height: 40px;
+            font-size: 16px;
+            margin-left: 100px;
+        }
+
+        #bestMovie {
+            flex-direction: column;
+        }
+
+
+        .movie-box-wrapper.best-mov {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #bestmovieName {
+            font-size: 40px;
+
+        }
+
+        #bestmovieDescription {
+            font-size: 24px;
+            min-height: 0px;
+        }
+
+        #Top6Films,
+        #genreMovies,
+        #genreMovies2,
+        #Top6Mystery,
+        #Top6Romance {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        #plusBtn {
+            display: block;
+        }
+
+
+        .movie-box-4.nodisplay,
+        .movie-box-3.nodisplay,
+        .movie-box-2.nodisplay,
+        .movie-box-1.nodisplay {
+            display: none;
+        }
+    }
+}
+
+.top-6 img {
+    width: 252px;
+    height: 252px;
+    object-fit: cover;
+}
 
 
 
@@ -198,9 +435,29 @@ h2 {
     vertical-align: middle;
     position: absolute;
     left: 10%;
-    margin: 5px 0;
 }
 
+
+
+.top-6 {
+    position: relative;
+}
+
+.movie-overlay {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 100%;
+    height: 102px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: left;
+    padding: 5px;
+    max-width: 242px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
 
 #DetailModalBtn {
     width: 81px;
@@ -216,59 +473,139 @@ h2 {
     padding-right: 4px;
     padding-bottom: 2px;
     padding-left: 4px;
+    align-self: flex-end;
+    margin-top: auto;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
-.top-6 {
-    position: relative;
+
+
+.nodisplay {
+    display: block;
 }
 
-#movie-overlay {
-    position: absolute;
-    top: 20%;
-    left: 0;
-    width: 89%;
-    height: 102px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    text-align: left;
-    padding: 5px;
-    max-width: 242px;
-}
+@media (max-width: 1024px) {
+    .modal-content {
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        position: relative;
 
-#Top6Films,
-#genreMovies,
-#genreMovies2,
-#Top6Mystery,
-#Top6Romance {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 2rem;
-}
-
-@media (min-width: 640px) {
-
-    #Top6Films,
-    #genreMovies,
-    #genreMovies2,
-    #Top6Mystery,
-    #Top6Romance {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-}
 
-@media (min-width: 768px) {
-
-    #Top6Films,
-    #genreMovies2,
-    #genreMovies,
-    #Top6Mystery,
-    #Top6Romance {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+    .modal-content h2,
+    .modal-content p,
+    .modal-image,
+    #fermerModalBtn {
+        grid-column: auto;
+        grid-row: auto;
+        margin-left: 0;
+        margin-right: 0;
     }
-}
 
-.top-6 img {
-    width: 252px;
-    height: 252px;
-    object-fit: cover;
+    .modal-content h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .modal-content p:nth-of-type(1),
+    .modal-content p:nth-of-type(2),
+    .modal-content p:nth-of-type(3),
+    .modal-content p:nth-of-type(4) {
+        margin-bottom: 2px;
+    }
+
+    .modal-content p:nth-of-type(5) {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .modal-content p:nth-of-type(6) {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .modal-content h2 {
+        order: 1;
+        margin-bottom: 10px;
+        padding-right: 270px;
+    }
+
+    .modal-content p:nth-of-type(1) {
+        order: 2;
+    }
+
+    .modal-content p:nth-of-type(2) {
+        order: 3;
+    }
+
+    .modal-content p:nth-of-type(3) {
+        order: 4;
+    }
+
+    .modal-content p:nth-of-type(4) {
+        order: 5;
+    }
+
+    .modal-content p:nth-of-type(5) {
+        order: 6;
+        margin-top: 20px;
+    }
+
+    .modal-content p:nth-of-type(6) {
+        order: 7;
+        margin-top: 15px;
+    }
+
+
+    .modal-content p:nth-of-type(7) {
+        order: 9;
+        margin-top: 10px;
+    }
+
+    .modal-image {
+        order: 8;
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        align-self: center;
+        margin: 20px 0;
+    }
+
+    .modal-content p:nth-of-type(7) {
+        margin-top: 20px;
+    }
+
+    #fermerModalBtn {
+        order: 0;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        background-color: transparent;
+        color: #ff0000;
+        font-size: 32px;
+        font-weight: bold;
+        line-height: 32px;
+
+        border: none;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+
+        font-size: 0;
+    }
+
+    #fermerModalBtn::before {
+        content: "×";
+        font-size: 32px;
+    }
 }

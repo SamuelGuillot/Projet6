@@ -89,12 +89,19 @@ async function getMovieDetails(movieUrl) {
     return details;
 }
 
-function displayMovieImage(movie, containerId) {
+function displayMovieImage(movie, containerId, top6bool) {
     const container = document.getElementById(containerId);
 
     const movieBox = document.createElement("div");
     movieBox.classList.add("movie-box-wrapper");
+    movieBox.classList.add("nodisplay")
     movieBox.movieDetails = movie;
+    if (top6bool) {
+        movieBox.classList.add("top-6");
+    }
+    else {
+        movieBox.classList.add("best-mov");
+    }
 
     const imgElement = document.createElement("img");
     imgElement.src = movie.image_url;
@@ -146,13 +153,13 @@ function openModal(movie) {
     }
 
     const directorSection = document.createElement("p");
-    directorSection.textContent = `Réalisé par: ${movie.directors.join(", ")}`;
+    directorSection.innerHTML = `<strong>Réalisé par:</strong><br> ${movie.directors.join(", ")}`;
 
     const movieDescription = document.createElement("p");
     movieDescription.textContent = `${movie.description}`;
 
     const actorsSection = document.createElement("p");
-    actorsSection.textContent = `Avec: ${movie.actors.join(", ")}`;
+    actorsSection.innerHTML = `<strong>Avec:</strong><br>${movie.actors.join(", ")}`;
 
     const movieImage = document.createElement("img");
     movieImage.src = movie.image_url;
@@ -168,6 +175,7 @@ function openModal(movie) {
     fermerButton.onclick = function () {
         closeModal();
     };
+
     [
         movieImage,
         movieTitle,
@@ -178,7 +186,7 @@ function openModal(movie) {
         directorSection,
         movieDescription,
         actorsSection,
-        fermerButton
+        fermerButton,
     ].forEach(element => modalContent.appendChild(element));
 
     const closeModalButton = document.getElementById("fermerModalBtn");
@@ -188,11 +196,13 @@ function openModal(movie) {
 
 }
 
-async function addOverlay(movieBox) {
+async function addOverlay(movieBox, movieIndex) {
     const movie = movieBox.movieDetails;
     const overlay = document.createElement("div");
-    overlay.id = "movie-overlay";
+    overlay.classList.add(`movie-overlay-${movieIndex}`);
+    overlay.classList.add("movie-overlay");
 
+    //  TODO enlever index movie overlay
     const titleMovie = document.createElement("p");
     titleMovie.textContent = movie.title;
     titleMovie.id = "movieTitleBox";
@@ -227,17 +237,58 @@ async function displayBestMovie(containerId) {
 
 }
 
-async function displayTop6Movies(genre, containerId) {
+async function displayTop6Movies(genre, containerId, top6bool = true) {
     const movieUrls = await getMovieUrls(genre);
+    let movieIndex = 1;
     const container = document.getElementById(containerId)
     container.innerHTML = ""
     for (const url of movieUrls) {
         const movieDetails = await getMovieDetails(url);
-        const movieBoxElement = displayMovieImage(movieDetails, containerId);
+        const movieBoxElement = displayMovieImage(movieDetails, containerId, top6bool);
+        movieBoxElement.classList.add(`movie-box-${movieIndex}`);
+        addOverlay(movieBoxElement, movieIndex);
+        movieIndex++;
 
-        movieBoxElement.classList.add("top-6"); //TODO à mettre dans displayimage selon param
-        addOverlay(movieBoxElement);
     }
+
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.classList.add("button-container");
+    const plusButton = document.createElement("button");
+    plusButton.id = "plusBtn";
+    plusButton.textContent = "Afficher plus";
+
+
+
+    buttonContainer.appendChild(plusButton);
+    container.appendChild(buttonContainer);
+    plusButton.onclick = function () {
+        const movieBoxes = container.querySelectorAll('.movie-box-wrapper');
+        if (plusButton.textContent === "Afficher plus") {
+
+            for (let i = 2; i < movieBoxes.length; i++) {
+                movieBoxes[i].classList.remove('nodisplay')
+            }
+            plusButton.textContent = "Afficher moins";
+        }
+        else {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 768) {
+                for (let i = 2; i < movieBoxes.length; i++) {
+                    movieBoxes[i].classList.add('nodisplay')
+
+                }
+            } else if (screenWidth <= 1024) {
+                for (let i = 4; i < movieBoxes.length; i++) {
+                    movieBoxes[i].classList.add('nodisplay')
+
+                }
+            }
+            plusButton.textContent = "Afficher plus";
+
+        }
+    };
+
 }
 
 
@@ -272,8 +323,21 @@ fetchGenres(urlgenres).then(genres => {
 });
 
 
-
+let top6 = true;
 displayBestMovie("bestMovie");
-displayTop6Movies("mystery", "Top6Mystery")
-displayTop6Movies("romance", "Top6Romance")
-displayTop6Movies("", "Top6Films")
+displayTop6Movies("mystery", "Top6Mystery", top6)
+displayTop6Movies("romance", "Top6Romance", top6)
+displayTop6Movies("", "Top6Films", top6)
+
+window.addEventListener('resize', function () {
+    const screenWidth = window.innerWidth;
+
+    // TODO UN SEUL OBUTON
+    if (screenWidth > 1024) {
+        // for (let i = 2; i < movieBoxes.length; i++) {
+        //     movieBoxes[i].style.display = 'none';
+        // }
+    }
+})
+
+
