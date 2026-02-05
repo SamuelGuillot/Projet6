@@ -170,6 +170,8 @@ h2 {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     font-family: 'Oswald', sans-serif;
+
+
 }
 
 .modal-content {
@@ -340,6 +342,7 @@ h2 {
 
     #plusBtn {
         display: block;
+        margin-left: 28rem;
     }
 
 
@@ -405,6 +408,7 @@ h2 {
 
         #plusBtn {
             display: block;
+            margin-left: 0;
         }
 
 
@@ -496,8 +500,13 @@ h2 {
         flex-direction: column;
         padding: 20px;
         position: relative;
+        overflow-y: auto;
+        box-sizing: border-box;
+        max-height: 800px;
 
     }
+
+
 
     .modal-content h2,
     .modal-content p,
@@ -534,7 +543,7 @@ h2 {
     .modal-content h2 {
         order: 1;
         margin-bottom: 10px;
-        padding-right: 270px;
+        padding-right: 30px;
     }
 
     .modal-content p:nth-of-type(1) {
@@ -605,7 +614,47 @@ h2 {
     }
 
     #fermerModalBtn::before {
-        content: "×";
+        content: "x";
         font-size: 32px;
     }
 }
+
+.selectContainer {
+    display: flex;
+    align-items: center;
+}
+
+.selectContainer h2 {
+    margin: 0;
+}
+
+.selectContainer select {
+    width: 25.25rem;
+    height: 3.8rem;
+    border: 1px solid black;
+    background-color: white;
+    margin-left: 10px;
+
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 2.25rem;
+    line-height: 1;
+    letter-spacing: 0;
+    color: black;
+}
+
+.selectedCategory {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: 0;
+    color: #000;
+    /* margin-left: 25rem;
+    white-space: nowrap; */
+    grid-column: 1 / -1;
+}
+
+/* ::scroll-marke
+rAfficher plus medium size centrer
+README decisions prises / images manquants etc / framework */

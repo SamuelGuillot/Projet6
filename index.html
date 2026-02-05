@@ -40,31 +40,28 @@
         <br>
         <div id="Top6Romance" class="grid"></div>
         <br>
-        <h2>Autres</h2>
+        <div class="selectContainer">
+            <h2>Autres: </h2>
+            <select id="buttoncategory" name="genreSelect" onchange="handleGenreSelection(event)"></select>
+        </div>
+        <br>
+
+        <div id="genreMovies" class="grid">
+            <p class="selectedCategory">Categorie choisie dans le menu déroulant</p>
+        </div>
+
         <br>
 
         <div class="selectContainer">
-            <select id="buttoncategory" name="genreSelect" onchange="handleGenreSelection(event)">
-            </select>
-            <div id="genreMovies" class="grid">
-                <p>Categorie choisie dans le menu déroulant</p>
-            </div>
+            <h2>Autres: </h2>
+            <select id="buttoncategory2" name="genreSelect2" onchange="handleGenreSelection(event)"></select>
         </div>
         <br>
-        <h2>Autres</h2>
-        <br>
 
-        <div class="selectContainer">
-            <select id="buttoncategory2" name="genreSelect2" onchange="handleGenreSelection(event)">
-            </select>
-            <div id="genreMovies2" class="grid">
-                <p>Categorie choisie dans le menu déroulant</p>
-            </div>
+        <div id="genreMovies2" class="grid">
+            <p class="selectedCategory">Voir au dessus (catégorie choisie = Comédies)</p>
         </div>
 
-        <div class="paragraphContainer">
-            <p>Voir au dessus (catégorie choisie = Comédies)</p>
-        </div>
 
         <div id="modal" class="modal">
             <div class="modal-content">

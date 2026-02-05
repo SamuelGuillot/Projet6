@@ -202,7 +202,7 @@ async function addOverlay(movieBox, movieIndex) {
     overlay.classList.add(`movie-overlay-${movieIndex}`);
     overlay.classList.add("movie-overlay");
 
-    //  TODO enlever index movie overlay
+
     const titleMovie = document.createElement("p");
     titleMovie.textContent = movie.title;
     titleMovie.id = "movieTitleBox";
@@ -329,15 +329,5 @@ displayTop6Movies("mystery", "Top6Mystery", top6)
 displayTop6Movies("romance", "Top6Romance", top6)
 displayTop6Movies("", "Top6Films", top6)
 
-window.addEventListener('resize', function () {
-    const screenWidth = window.innerWidth;
-
-    // TODO UN SEUL OBUTON
-    if (screenWidth > 1024) {
-        // for (let i = 2; i < movieBoxes.length; i++) {
-        //     movieBoxes[i].style.display = 'none';
-        // }
-    }
-})
 
 
