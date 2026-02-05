@@ -650,11 +650,6 @@ h2 {
     line-height: 1;
     letter-spacing: 0;
     color: #000;
-    /* margin-left: 25rem;
-    white-space: nowrap; */
+
     grid-column: 1 / -1;
 }
-
-/* ::scroll-marke
-rAfficher plus medium size centrer
-README decisions prises / images manquants etc / framework */
